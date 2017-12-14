@@ -3,19 +3,19 @@
 
   <default-config>
     <property name="driverClass">com.mysql.jdbc.Driver</property>
-	<property name="jdbcUrl">jdbc:mysql://localhost:3306/webdb?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false</property>
+	<property name="jdbcUrl">jdbc:mysql://localhost:3306/Shop?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false</property>
 	<property name="user">root</property>
 	<property name="password">fj123456</property>
 	<property name="initialPoolSize">5</property>
 	<property name="maxPoolSize">20</property>
   </default-config>
   
-  <named-config name="rocky"> 
+<!--   <named-config name="rocky"> 
     <property name="driverClass">com.mysql.jdbc.Driver</property>
 	<property name="jdbcUrl">jdbc:mysql://webdb</property>
 	<property name="user">root</property>
 	<property name="password">fj123456</property>
-  </named-config>
+  </named-config> -->
   
 
 </c3p0-config>
