@@ -37,4 +37,16 @@ public class UserService {
 		return row>0?true:false;
 	}
 
+	public User login(String username, String password) {
+		UserDao dao = new UserDao();
+		User user = null;
+		try {
+			user = dao.login(username,password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+
 }

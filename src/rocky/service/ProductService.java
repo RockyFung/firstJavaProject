@@ -2,11 +2,15 @@ package rocky.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
+import rocky.dao.Order;
+import rocky.dao.OrderItem;
 import rocky.dao.ProductDao;
 import rocky.domain.Category;
 import rocky.domain.PageBean;
 import rocky.domain.Product;
+import rocky.utils.DataSourceUtils;
 
 public class ProductService {
 
@@ -90,6 +94,72 @@ public class ProductService {
 			e.printStackTrace();
 		}
 		return product;
+	}
+
+	// 提交订单
+	public void submitOrder(Order order) {
+		ProductDao dao = new ProductDao();
+		
+		try {
+			// 开启事务
+			DataSourceUtils.startTransaction();
+			// 存储order
+			dao.addOrders(order);
+			// 存储orderItem
+			dao.addOrderItem(order);
+		} catch (SQLException e) {
+			// 回滚
+			try {
+				DataSourceUtils.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				DataSourceUtils.commitAndRelease();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	public void updateOrderAdrr(Order order) {
+		ProductDao dao = new ProductDao();
+		try {
+			dao.updateOrderAdrr(order);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public List<Order> findAllOrders(String uid) {
+		ProductDao dao = new ProductDao();
+		List<Order> orderList = null;
+		try {
+			orderList = dao.findAllOrders(uid);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+
+	public List<Map<String, Object>> findAllOrderItemByOid(String oid) {
+		ProductDao dao = new ProductDao();
+		List<Map<String, Object>> mapList = null;
+		try {
+			mapList = dao.findAllOrderItemByOid(oid);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mapList;
 	}
 
 }

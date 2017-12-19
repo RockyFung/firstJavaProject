@@ -1,15 +1,15 @@
 package rocky.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import rocky.domain.Category;
 import rocky.domain.Product;
 import rocky.utils.DataSourceUtils;
@@ -56,6 +56,47 @@ public class ProductDao {
 		String sql = "select * from product where pid=?";
 		Product product = queryRunner.query(sql, new BeanHandler<Product>(Product.class),pid);
 		return product;
+	}
+
+	// 向orders插入数据
+	public void addOrders(Order order) throws SQLException {
+		QueryRunner queryRunner = new QueryRunner();
+		String sql = "insert into orders value(?,?,?,?,?,?,?,?)";
+		Connection conn = DataSourceUtils.getConnection();
+		queryRunner.update(conn,sql,order.getOid(),order.getOrdertime(),order.getTotal(),order.getState(),order.getAddress(),order.getName(),order.getTelephone(),order.getUser().getUid());
+		
+	}
+
+	// 向orderItem插入数据
+	public void addOrderItem(Order order) throws SQLException {
+		QueryRunner queryRunner = new QueryRunner();
+		String sql = "insert into orderitem value(?,?,?,?,?)";
+		Connection conn = DataSourceUtils.getConnection();
+		List<OrderItem> orderItems = order.getOrderItems();
+		for (OrderItem orderItem : orderItems) {
+			queryRunner.update(conn,sql,orderItem.getItemid(),orderItem.getCount(),orderItem.getSubtotal(),orderItem.getProduct().getPid(),orderItem.getOrder().getOid());
+		}
+	}
+
+	public void updateOrderAdrr(Order order) throws SQLException {
+		QueryRunner queryRunner = new QueryRunner(DataSourceUtils.getDataSource());
+		String sql = "update orders set address=?,name=?,telephone=? where oid=? ";
+		queryRunner.update(sql,order.getAddress(),order.getName(),order.getTelephone(),order.getOid());
+		
+	}
+
+	public List<Order> findAllOrders(String uid) throws SQLException {
+		QueryRunner queryRunner = new QueryRunner(DataSourceUtils.getDataSource());
+		String sql = "select * from orders where uid=?";
+		List<Order>orderList = queryRunner.query(sql, new BeanListHandler<Order>(Order.class),uid);
+		return orderList;
+	}
+
+	public List<Map<String, Object>> findAllOrderItemByOid(String oid) throws SQLException {
+		QueryRunner queryRunner = new QueryRunner(DataSourceUtils.getDataSource());
+		String sql = "select * from orderitem i,product p where i.pid=p.pid and i.oid=?";
+		List<Map<String, Object>>mapList = queryRunner.query(sql, new MapListHandler(),oid);
+		return mapList;
 	}
 
 }

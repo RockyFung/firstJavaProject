@@ -22,6 +22,15 @@ body {
 	height: 300px;
 }
 </style>
+
+<script type="text/javascript">
+	function addCart(){
+		// 获得购买商品的数量
+		var buyNum = $("#quantity").val();
+		location.href="${pageContext.request.contextPath}/product?method=addProductToCart&pid=${product.pid}&buyNum="+buyNum;
+		
+	}
+</script>
 </head>
 
 <body>
@@ -73,13 +82,14 @@ body {
 						</div>
 
 						<div style="margin: 20px 0 10px 0;; text-align: center;">
-							<a href="cart.htm"> <input
+							<a href="javascript:void(0);" onclick="addCart()"> 
+							<input
 								style="background: url('./images/product.gif') no-repeat scroll 0 -600px rgba(0, 0, 0, 0); height: 36px; width: 127px;"
 								value="加入购物车" type="button">
 							</a> &nbsp;收藏商品
 						</div>
 						<div>
-							<a href="${pageContext.request.contextPath}/productListByCid?cid=${product.cid}&currentPage=${currentPage}">返回</a>
+							<a href="${pageContext.request.contextPath}/product?method=productListByCid&cid=${product.cid}&currentPage=${currentPage}">返回</a>
 						</div>
 					</div>
 				</div>
